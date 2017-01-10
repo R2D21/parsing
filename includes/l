@@ -1,0 +1,40 @@
+#ifndef _LIBMY_H_
+#define _LIBMY_H_
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+typedef	struct	t_elements t_elements;
+
+struct	t_elements
+{
+  char		*str;
+  t_elements	*next;
+};
+
+typedef	struct	s_list
+{
+  t_elements	*first;
+}		t_list;
+
+int	my_strlen(char *str);
+int	my_strcmp(char *s1, char *s2);
+
+char	*my_strcpy(char *str, char *dest);
+
+char	**malloc_tab(char **tab);
+char	**my_wordtab(char *str, char c);
+
+t_list		*init();
+
+
+void	add_elem(t_list *list, char *str);
+void	aff_list(t_list *liste);
+void	my_putchar(char c);
+void	my_putstr(char *str);
+void	my_putstr_error(char *str);
+void	my_puttab(char **tab);
+
+#endif
