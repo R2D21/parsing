@@ -1,43 +1,37 @@
 #include "../includes/my.h"
 
-void		get_verbe_list(t_list1	*list)
+void		get_verbe_list(t_gere *gere)
 {
   char		*str;
-  char		**tab;
   int		i;
 
   i = 0;
-  tab = NULL;
-  tab = malloc_tab(tab);
   str = malloc(4096 * sizeof(char));
   read(open("datas/verbes", S_IRUSR), str, 4095);
-  tab = my_wordtab(str, ';');
-  if (list == NULL)
+  gere->tab = my_wordtab(str, ';');
+  if (gere->list == NULL)
     my_putstr_error("Error\n");
   else
     {
-      while (*tab[i] != '\0')
-      	add_list(list, tab[i++]);
+      while (*gere->tab[i] != '\0')
+        add_list(gere, "verbe", gere->tab[i++]);
     }
 }
 
-void		get_complements_list(t_list1	*list)
+void		get_complements_list(t_gere *gere)
 {
   char		*str;
-  char		**tab;
   int		i;
 
   i = 0;
-  tab = NULL;
-  tab = malloc_tab(tab);
   str = malloc(4096 * sizeof(char));
   read(open("datas/complements", S_IRUSR), str, 4095);
-  tab = my_wordtab(str, ';');
-  if (list == NULL)
+  gere->tab = my_wordtab(str, ';');
+  if (gere->list == NULL)
     my_putstr_error("Error\n");
   else
     {
-      while (*tab[i] != '\0')
-      	add_list_complements(list, tab[i++]);
+      while (*gere->tab[i] != '\0')
+	add_list(gere, "com", gere->tab[i++]);
     }
 }

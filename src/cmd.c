@@ -1,12 +1,13 @@
 #include "../includes/my.h"
 
-int		check_conjugaison(t_list1 *list, char *buff)
+int		check_conjugaison(t_list1 *list,char *buff, t_gere *gere)
 {
-  if ((check_verbe_list(list, my_wordtab(buff, ' '))) == 0)
+  gere->list = list;
+  if ((check_verbe_list(gere->list, my_wordtab(buff, ' '))) == 0)
     {
-      if (check_verbe_G1(list, buff) == 0)
+      if (check_verbe_G1(gere->list, buff, gere) == 0)
       	return (0);
-      else if (check_verbe_G2(list, buff) == 0)
+      else if (check_verbe_G2(gere->list, buff, gere) == 0)
       	return (0);
       else
 	return (1);
@@ -14,22 +15,49 @@ int		check_conjugaison(t_list1 *list, char *buff)
   return (-1);
 }
 
-void		AI(t_list1 *list, char *buff)
+void		checks(t_gere *gere, char *buff, char **tab)
+{
+  if ((check_conjugaison(gere->list, buff, gere)) == 0)
+    {
+      get_complements_list(gere);
+      if ((check_complements_list(gere->list, tab)) == 0)
+	{
+	  my_putstr("\033[31;32mJe reconnais la syntaxe de la phrase.\033[0m\n");
+	  my_putchar('\n');
+	  update_historique(buff);
+	}
+      else
+	{
+	  my_putstr("\033[0;31mJe ne reconnais pas la syntaxe de la phrase.\033[0m\n");
+	  my_putchar('\n');
+	}
+    }
+}
+
+void	        IA(t_list1 *list, char *buff)
 {
   char		**tab;
+  t_gere	*gere;
 
   tab = NULL;
+  gere = NULL;
   tab = malloc_tab(tab);
   tab = my_wordtab(buff, ' ');
-  get_verbe_list(list);
-  if ((check_conjugaison(list, buff)) == 0)
+  if ((gere = init_gere(gere)) == NULL)
+    my_putstr_error("[CMD:28] Error: init_gere() is fail.\n");
+  else
     {
-      get_complements_list(list);
-      if ((check_complements_list(list, tab)) == 0)
-      	my_putstr("Je reconnais la syntaxe de la phrase.\n");
-      else
-      	my_putstr("Je ne reconnais pas la syntaxe de la phrase.\n");
+      gere->list = list;
+      get_verbe_list(gere);
+      checks(gere, buff, tab);
     }
+}
+
+int		search(t_list1 *list)
+{
+  
+  aff_list(list, "verbe");
+  return (1);
 }
 
 int		cmd(/* t_AI *AI */)
@@ -55,7 +83,7 @@ int		cmd(/* t_AI *AI */)
 	  return (0);
 	}
       else
-	AI(list, buff);
+	IA(list, buff);
     }
   return (42);
 }

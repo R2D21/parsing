@@ -32,14 +32,19 @@ int	        conjugaison1(t_datas *datas,char **buff, int i)
 {
   while (datas->pronom != NULL)
     {
-      if (strcmp(buff[i], datas->pronom) == 0)
-	{
-	  i++;
-	  if (buff[i][my_strlen(buff[i]) - 1] == datas->terminaison[0])
-	    return (0);
-        }
-      else
-      datas = datas->next;
+       if (datas->terminaison != NULL)
+	 {
+	   if (strcmp(buff[i], datas->pronom) == 0)
+	     {
+	       i++;
+	       if (buff[i][my_strlen(buff[i]) - 1] == datas->terminaison[0])
+		 return (0);
+	     }
+	   else
+	     datas = datas->next;
+	 }
+       else
+	 return (1);
     }
   return (1);
 }
@@ -48,16 +53,21 @@ int	        conjugaison2(t_datas *datas,char **buff, int i)
 {
   while (datas->pronom != NULL)
     {
-      if (strcmp(buff[i], datas->pronom) == 0)
-	{
-	  i++;
-	  if (buff[i][my_strlen(buff[i]) - 3] == datas->terminaison[0])
-	    if (buff[i][my_strlen(buff[i]) - 2] == datas->terminaison[1])
-	      if (buff[i][my_strlen(buff[i]) - 1] == datas->terminaison[2])
-		return (0);
-        }
-      else
-      datas = datas->next;
+       if (datas->terminaison != NULL)
+	 {
+	   if (strcmp(buff[i], datas->pronom) == 0)
+	     {
+	       i++;
+	       if (buff[i][my_strlen(buff[i]) - 3] == datas->terminaison[0])
+		 if (buff[i][my_strlen(buff[i]) - 2] == datas->terminaison[1])
+		   if (buff[i][my_strlen(buff[i]) - 1] == datas->terminaison[2])
+		     return (0);
+	     }
+	   else
+	     datas = datas->next;
+	 }
+       else
+	 return (1);
     }
   return (1);
 }
@@ -78,7 +88,8 @@ int		func1(char **tab, t_list1 *list, char *str, int i)
 	  tab = my_wordtab(str, ' ');
 	  do
 	    {
-	      my_strcpy(tab[i], tmp);
+	      if (*tab[i] != '\0')
+		my_strcpy(tab[i], tmp);
 	      if ((conjugaison1((datas = list->first), tab, i)) == 0)
 		return (0);
 	      else if ((conjugaison2(datas, tab, i)) == 0)
@@ -91,25 +102,21 @@ int		func1(char **tab, t_list1 *list, char *str, int i)
   return (1);
 }
 
-int		check_verbe_G1(t_list1 *list, char *str)
+int		check_verbe_G1(t_list1 *list, char *str, t_gere *gere)
 {
   char		*buff;
-  char		**tab;
   int		i;
   
   i = 0;
-  tab = NULL;
   if ((buff = malloc(4096 * sizeof (char))) == NULL)
     my_putstr_error("[CHECK_LIST:36] Error: malloc() is fail.\nbuff is NULL.\n");
-  else if ((tab = malloc_tab(tab)) == NULL)
-    my_putstr_error("[CHECK_LIST:39] Error: malloc() is fail.\ntab is NULL.\n");
   else
     {
       read(open("datas/conjugaison", S_IRUSR), buff, 4095);
-      tab = my_wordtab(buff, ';');
-      add_list_tem(list, tab);
-      add_list_pronom(list, tab);
-      if ((func1(tab, list, str, i)) == 0)
+      gere->tab = my_wordtab(buff, ';');
+      add_list(gere, "term", NULL);
+      add_list(gere, "pronom", NULL);
+      if ((func1(gere->tab, list, str, i)) == 0)
 	return (0);
     }
   return (-1);

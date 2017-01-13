@@ -84,10 +84,10 @@ void		aff_list_pronom(t_list1 *list)
     }
 }
 
-void		aff_list1(t_list1 *list)
+void		aff_verbe(t_list1 *list)
 {
   t_datas	*datas;
-  
+
   if ((datas = malloc(1 * sizeof (*datas))) == NULL)
     {
       my_putstr_error("[GETS_LIST:9] Error malloc() is fail.\n");
@@ -109,5 +109,22 @@ void		aff_list1(t_list1 *list)
 	  datas = datas->next;
 	  my_putchar('\n');
 	}
+    }
+}
+
+void		aff_list(t_list1 *list, char *str)
+{
+  int		i;
+  t_aff       flags1[]= {
+    {"verbe", aff_verbe},
+    {"pronom", aff_list_pronom},
+    {"com", aff_list_complements},
+  };
+  i = 0;
+  while (i < 3)
+    {
+      if (strcmp(str, flags1[i].flags) == 0)
+        flags1[i].aff(list);
+      i++;
     }
 }

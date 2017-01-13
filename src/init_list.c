@@ -1,7 +1,5 @@
 #include "../includes/my.h"
 
-
-
 t_list1		*init_list()
 {
   t_list1	*list;

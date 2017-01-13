@@ -1,5 +1,22 @@
 #include "../includes/my.h"
 
+int		check_complement(t_datas *datas, char **tab, int j)
+{
+  while (*tab[j] != '\0')
+    {
+      if (datas->complements != NULL)
+	{
+	  if ((my_strncmp(datas->complements, tab[j], my_strlen(datas->complements))) == 0)
+	    return (0);
+	  else
+	    j++;
+	}
+      else
+	return (1);
+    }
+  return (1);
+}
+
 int		check_complements_list(t_list1 *list, char **tab)
 {
   t_datas	*datas;
@@ -16,11 +33,8 @@ int		check_complements_list(t_list1 *list, char **tab)
       datas = list->first;
       while (datas != NULL)
 	{
-	  while (tab[j][0] != '\0')
-	    if ((strncmp(datas->complements, tab[j], my_strlen(datas->complements))) == 0)
-	      return (0);
-	    else
-	      j++;
+	  if ((check_complement(datas, tab, j)) == 0)
+	    return (0);
 	  datas = datas->next;
 	  j = 0;
 	}

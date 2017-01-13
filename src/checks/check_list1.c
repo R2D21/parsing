@@ -63,25 +63,21 @@ int	        conjugaisonG2(char **tab, t_list1 *list, char *str, int i)
   return (1);
 }
 
-int		check_verbe_G2(t_list1 *list, char *str)
+int		check_verbe_G2(t_list1 *list, char *str, t_gere *gere)
 {
   char		*buff;
-  char		**tab;
   int		i;
   
   i = 0;
-  tab = NULL;
   if ((buff = malloc(4096 * sizeof (char))) == NULL)
     my_putstr_error("[CHECK_LIST:36] Error: malloc() is fail.\nbuff is NULL.\n");
-  else if ((tab = malloc_tab(tab)) == NULL)
-    my_putstr_error("[CHECK_LIST:39] Error: malloc() is fail.\ntab is NULL.\n");
   else
     {
       read(open("datas/conjugaison2", S_IRUSR), buff, 4095);
-      tab = my_wordtab(buff, ';');
-      add_list_tem(list, tab);
-      add_list_pronom(list, tab);
-      if ((conjugaisonG2(tab, list, str, i)) == 0)
+      gere->tab = my_wordtab(buff, ';');
+      add_list(gere, "term", NULL);
+      add_list(gere, "pronom", NULL);
+      if ((conjugaisonG2(gere->tab, list, str, i)) == 0)
 	return (0);
     }
   return (-1);
